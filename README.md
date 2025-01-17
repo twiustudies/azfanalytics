@@ -31,7 +31,6 @@ The function is triggered by Event Grid events. It collects events for one minut
 
 The SQL database connection is initialized with the provided connection string. If the connection fails, appropriate error messages are logged.
 
-connection_string = "<your-sql-connection-string>"
 ## Event Processing:
 
 The function processes events from Event Grid, extracts attributes, and appends them to lists. After one minute, it calculates statistics and writes the results to the SQL database.
