@@ -17,6 +17,7 @@ fraction_medium_b_list = []
 start_time = datetime.now()
 
 # Fetch the environment variables
+# OPTIMIZATION 1: no secrets in code but in environment variables
 database_user = os.getenv('DATABASEUSER')
 database_pw = os.getenv('DATABASEPW')
 
@@ -47,7 +48,7 @@ def retry_on_failure(max_retries=3, delay=2):
     return decorator
 
 # Function to write the calculated statistics to the database
-# OPTIMIZATION 1: retry on failure decorator
+# OPTIMIZATION 2: retry on failure decorator
 @retry_on_failure()
 def write_to_database(calculation_timestamp, avg_a, stddev_a, median_a, avg_b, stddev_b, median_b, num_events):
     # Establish a connection to the database
@@ -61,7 +62,7 @@ def write_to_database(calculation_timestamp, avg_a, stddev_a, median_a, avg_b, s
         conn.commit()
 
 # Function to calculate the statistics (average, standard deviation, median) for the lists
-# OPTIMIZATION 2: helper function
+# OPTIMIZATION 3: helper function
 def calculate_statistics():
     # Calculate statistics for fraction medium A
     avg_a = statistics.mean(fraction_medium_a_list)
@@ -89,7 +90,7 @@ def calculate_statistics():
     write_to_database(calculation_timestamp, avg_a, stddev_a, median_a, avg_b, stddev_b, median_b, num_events)
 
 # Event grid trigger that listens for incoming events
-# OPTIMIZATION 3: code refactoring into smaller functions
+# OPTIMIZATION 4: code refactoring into smaller functions
 @app.event_grid_trigger(arg_name="azeventgrid")
 def EventGridTrigger(azeventgrid: func.EventGridEvent):
     global start_time, fraction_medium_a_list, fraction_medium_b_list
