@@ -5,6 +5,7 @@ import statistics
 import pyodbc
 import time
 from functools import wraps
+import os
 
 app = func.FunctionApp()
 
@@ -15,8 +16,12 @@ fraction_medium_b_list = []
 # Initialize the start time to track intervals
 start_time = datetime.now()
 
-# Database connection string to connect to Azure SQL Database
-connection_string = "Driver={ODBC Driver 18 for SQL Server};Server=tcp:dataengprojecttw.database.windows.net,1433;Database=eventstore;Uid=thilowiltsadmin;Pwd=abc123abc123!;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+# Fetch the environment variables
+database_user = os.getenv('DATABASEUSER')
+database_pw = os.getenv('DATABASEPW')
+
+# Construct the connection string using environment variables
+connection_string = f"Driver={{ODBC Driver 18 for SQL Server}};Server=tcp:dataengprojecttw.database.windows.net,1433;Database=eventstore;Uid={database_user};Pwd={database_pw};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
 
 # Decorator to add retry logic in case of failures when interacting with the database
 def retry_on_failure(max_retries=3, delay=2):
